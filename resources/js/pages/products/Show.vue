@@ -3,6 +3,7 @@ import {ref} from 'vue'
 import AppLayout from "@/layouts/AppLayout.vue";
 import ProductCard from "@/pages/products/ProductCard.vue";
 import ProductImageCarousel from "@/pages/products/ProductImageCarousel.vue";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     product: {
@@ -14,7 +15,10 @@ const props = defineProps({
         required: false
     }
 });
-
+const quantity = ref(1)
+const addToBasket = () => {
+    router.post('/basket', {product_id: props.product.id, quantity:quantity.value })
+}
 
 </script>
 
@@ -28,24 +32,25 @@ const props = defineProps({
                 <h1 class="text-2xl font-semibold text-gray-800">{{ product.name }}</h1>
                 <p class="text-gray-600 text-sm" v-html="product.description"></p>
 
-                <div class="text-2xl font-bold text-green-700">{{ product.prices[0]?.price }}</div>
+                <div class="text-2xl font-bold text-green-700">{{ product.current_price?.price }}</div>
 
                 <div class="mt-4">
                     <label class="block mb-1 text-sm font-medium text-gray-700">Quantity</label>
-                    <select class="border rounded-lg px-3 py-2">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
+                    <select v-model="quantity" class="border rounded-lg px-3 py-2">
+                        <option :value="1">1</option>
+                        <option :value="2">2</option>
+                        <option :value="3">3</option>
                     </select>
                 </div>
             </div>
 
             <!-- Buy Box -->
             <div class="lg:col-span-3 border rounded-xl p-4 space-y-4 shadow-sm">
-                <div class="text-xl font-semibold text-gray-800">{{ product.prices[0]?.price }}</div>
+                <div class="text-xl font-semibold text-gray-800">{{ product.current_price?.price }}</div>
                 <p class="text-sm text-green-600">In stock</p>
 
                 <button
+                    @click="addToBasket"
                     class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-lg transition"
                 >
                     Add to Basket

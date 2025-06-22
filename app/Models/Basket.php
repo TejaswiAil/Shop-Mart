@@ -13,6 +13,13 @@ class Basket extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'product_id'
+        'user_id',
+        'basket_status_id'
     ];
+
+
+    public function basketItems(): hasMany
+    {
+        return $this->hasMany(BasketItem::class);
+    }
 }

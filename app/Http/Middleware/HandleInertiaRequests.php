@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Basket;
+use App\Models\BasketStatus;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Foundation\Inspiring;
@@ -41,6 +43,19 @@ class HandleInertiaRequests extends Middleware
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $basket = Basket::query()
+            ->where('user_id', $request->user()->id)
+            ->where('basket_status_id', BasketStatus::DRAFT)
+            ->first();
+
+        $basketItemQuantity = 0;
+
+        if($basket) {
+            $basketItemQuantity = $basket->basketItems
+                ->pluck('quantity')
+                ->sum();
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -55,7 +70,8 @@ class HandleInertiaRequests extends Middleware
             'categories' => Category::all(),
             'sub_categories' => $request->has('category_id') ? Subcategory::query()
                 ->where('category_id', $request->get('category_id'))
-                ->get() : []
+                ->get() : [],
+            'basketItemQuantity' => $basketItemQuantity
         ];
     }
 }

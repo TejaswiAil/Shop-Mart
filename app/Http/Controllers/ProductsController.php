@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ProductController extends Controller
+class ProductsController extends Controller
 {
     public function index(Request $request)
     {
@@ -21,21 +21,22 @@ class ProductController extends Controller
 
         if (!$categoryId) {
             $trendingProducts = Product::query()
-                ->with(['images', 'prices'])
+                ->with(['images', 'currentPrice'])
                 ->whereHas('subcategories', function ($query) {
                     $query->whereIn('subcategory_id', [1, 2, 3, 4]);
                 })
                 ->get();
 
             $discountedProducts = Product::query()
-                ->with(['images', 'prices'])
+                ->with(['images', 'currentPrice', 'currentOffer'])
                 ->whereHas('offers', function ($query) {
-                    $query->where('discount', '>=', '50');
+                    $query->where('discount', '>=', '50')
+                        ->active();
                 })
                 ->get();
         } else {
             $products = Product::query()
-                ->with(['images', 'prices'])
+                ->with(['images', 'currentPrice'])
                 ->when($request->has("category_id"), function (Builder $query) use ($request) {
                     $query->whereHas('subcategories', function ($query) use ($request) {
                         $query->where("category_id", $request->has("category_id"));
@@ -53,12 +54,15 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        $product->load(['images', 'prices']);
+        $product->load(['images', 'currentPrice']);
 
         $categoryIds = $product->subcategories()->pluck('category_id')->unique();
 
         $similarProducts = Product::query()
-            ->with(['images', 'prices'])
+            ->with([
+                'images',
+                'currentPrice'
+            ])
             ->whereHas('subcategories', function ($query) use ($categoryIds) {
                 $query->whereIn('category_id', $categoryIds);
             })

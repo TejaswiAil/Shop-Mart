@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BasketStatus extends Model
 {
     use SoftDeletes;
+
+    const DRAFT = 1;
 }
