@@ -14,4 +14,9 @@ class BasketItem extends Model
     {
         return $this->belongsTo(Basket::class);
     }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

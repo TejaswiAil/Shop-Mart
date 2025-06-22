@@ -15,8 +15,9 @@ require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
-    Route::get('products', [\App\Http\Controllers\ProductsController::class, 'index']);
+    Route::get('products', [\App\Http\Controllers\ProductsController::class, 'index'])->name('products.index');;
     Route::get('products/{product}', [\App\Http\Controllers\ProductsController::class, 'show'])->name('products.show');
     Route::post('basket', [\App\Http\Controllers\BasketsController::class, 'store']);
+    Route::get('checkout', \App\Http\Controllers\CheckoutController::class);
 });
 
