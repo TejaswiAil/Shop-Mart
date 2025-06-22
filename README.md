@@ -10,16 +10,16 @@ This project is a **modern e-commerce platform** modeled after Amazon, built usi
 
 ## Current Features (In Progress)
 
-- ✅ Data models created for:
+- Data models created for:
   - Users
   - Products
   - Categories
   - Orders
   - Carts (Basket)
-- ✅ Product listing and detail pages
-- ✅ Shopping **basket functionality** (add items)
-- 🔄 Checkout page structure and flow (in progress)
-- 🔐 Authentication system (scaffolded)
+-  Product listing and detail pages
+- Shopping **basket functionality** (add items)
+- Checkout page structure and flow (in progress)
+- Authentication system (scaffolded)
 
 ##  Project Goals
 
