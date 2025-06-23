@@ -41,19 +41,29 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $loggedData = [];
 
-        $basket = Basket::query()
-            ->where('user_id', $request->user()->id)
-            ->where('basket_status_id', BasketStatus::DRAFT)
-            ->first();
+        if($request->user() != null){
+            $basket = Basket::query()
+                ->where('user_id', $request->user()->id)
+                ->where('basket_status_id', BasketStatus::DRAFT)
+                ->first();
 
-        $basketItemQuantity = 0;
+            $basketItemQuantity = 0;
 
-        if($basket) {
-            $basketItemQuantity = $basket->basketItems
-                ->pluck('quantity')
-                ->sum();
+            if($basket) {
+                $basketItemQuantity = $basket->basketItems
+                    ->pluck('quantity')
+                    ->sum();
+            }
+
+            $loggedData = [
+                'categories' => Category::all(),
+                'sub_categories' => $request->has('category_id') ? Subcategory::query()
+                    ->where('category_id', $request->get('category_id'))
+                    ->get() : [],
+                'basketItemQuantity' => $basketItemQuantity
+            ];
         }
 
         return [
@@ -67,11 +77,7 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'categories' => Category::all(),
-            'sub_categories' => $request->has('category_id') ? Subcategory::query()
-                ->where('category_id', $request->get('category_id'))
-                ->get() : [],
-            'basketItemQuantity' => $basketItemQuantity
+            ...$loggedData
         ];
     }
 }
