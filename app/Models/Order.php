@@ -10,7 +10,7 @@ class Order extends Model
 {
     use SoftDeletes;
 
-    public function status(): BelongsTo
+    public function orderStatus(): BelongsTo
     {
         return $this->belongsTo(OrderStatus::class);
     }
@@ -18,6 +18,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function basket(): BelongsTo
+    {
+        return $this->belongsTo(Basket::class);
     }
 
     public function address(): BelongsTo

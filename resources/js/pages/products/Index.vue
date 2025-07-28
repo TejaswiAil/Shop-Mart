@@ -1,7 +1,6 @@
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Products"/>
-
         <template v-if="trendingProducts">
             <h4 class="p-3">Trending</h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4">
@@ -34,7 +33,7 @@
             <h4 class="p-3">Products</h4>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
                 <Link
-                    v-for="product in products"
+                    v-for="product in products.data"
                     :key="product.id"
                     :href="'/products/' + product.id"
                 >

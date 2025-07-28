@@ -8,8 +8,6 @@
 
             <!-- Item -->
             <BasketItem v-for="item in basketItems" :basket-item="item" />
-
-            <!-- Repeat Item as needed -->
         </div>
 
         <!-- Summary Box -->
@@ -18,7 +16,7 @@
                 Subtotal ({{ totalItems }} items): <span class="font-bold text-lg">TO-DO</span>
             </div>
 
-            <button
+            <button  @click="confirmOrder"
                 class="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md transition">
                 Proceed to Checkout
             </button>
@@ -35,6 +33,7 @@
 import AppLayout from "@/layouts/AppLayout.vue";
 import BasketItem from "@/pages/checkout/BasketItem.vue";
 import {computed} from "vue";
+import {Link, router} from '@inertiajs/vue3';
 
 const props = defineProps({
     basketItems : {
@@ -48,6 +47,10 @@ const totalItems = computed(() => {
         .map(item => item.quantity)
         .reduce((acc, item) => acc + item, 0);
 })
+
+const confirmOrder = () => {
+    router.post('/orders', {basket_id: props.basketItems.id})
+}
 </script>
 
 <style scoped>

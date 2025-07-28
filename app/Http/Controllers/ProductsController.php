@@ -12,9 +12,9 @@ class ProductsController extends Controller
 {
     public function index(Request $request)
     {
-        $categoryId = null; //or null
-        $subcategories = []; //or [1, 2];
-
+        $categoryId = $request->input('category_id'); //or null
+        $subcategories = $request->input('subcategories');; //or [1, 2];
+//dd($subcategories);
         $trendingProducts = null;
         $discountedProducts = null;
         $products = null;
@@ -37,12 +37,17 @@ class ProductsController extends Controller
         } else {
             $products = Product::query()
                 ->with(['images', 'currentPrice'])
-                ->when($request->has("category_id"), function (Builder $query) use ($request) {
-                    $query->whereHas('subcategories', function ($query) use ($request) {
-                        $query->where("category_id", $request->has("category_id"));
+                ->when($request->filled('category_id') || $request->filled('subcategories'), function (Builder $query) use ($request) {
+                    $query->whereHas('subcategories', function ($subQuery) use ($request) {
+                        if ($request->filled('category_id')) {
+                            $subQuery->where('category_id', $request->input('category_id'));
+                        }
+
+                        if ($request->filled('subcategories')) {
+                            $subQuery->whereIn('id', (array)$request->input('subcategories'));
+                        }
                     });
-                })
-                ->paginate(10);
+                })->paginate(10);
         }
 
         return Inertia::render('products/Index', [

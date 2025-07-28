@@ -69,4 +69,17 @@ class User extends Authenticatable
             ->using(AddressUser::class)
             ->withPivot('valid_from', 'valid_to');
     }
+
+    //Check this
+    public function activeAddresses():BelongsToMany
+    {
+        return $this->belongsToMany(Address::class)
+            ->using(AddressUser::class)
+            ->wherePivot('valid_from', '<=' , 'today' )
+            ->where(function($query) {
+                $query->where('valid_to', '>=', today())
+                    ->orWhereNull('valid_to');
+            })
+            ->withPivot('valid_from', 'valid_to');
+    }
 }

@@ -2,7 +2,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import {usePage} from "@inertiajs/vue3";
-import { Link } from '@inertiajs/vue3'
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     breadcrumbs: {

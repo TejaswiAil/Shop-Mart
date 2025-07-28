@@ -35,8 +35,9 @@ class BasketsController extends Controller
     {
         $validated = $request->validate([
             'quantity' => 'required|int|min:1',
-            'product_id' => ['required', 'int', Rule::exists(Product::class, "id")],
+            'product_id' => ['required', 'int', Rule::exists(Product::class, 'id')],
         ]);
+
         $userId = Auth::id();
         $basket = Basket::firstOrCreate(
             [
@@ -50,7 +51,7 @@ class BasketsController extends Controller
             ->basketItems
             ->firstWhere('product_id', $validated['product_id']);
 
-        if ($basketItem != null) {
+        if($basketItem != null) {
             $basketItem->quantity = $basketItem->quantity > 0 ? $basketItem->quantity + $validated['quantity'] : $validated['quantity'];
             $basketItem->save();
         } else {

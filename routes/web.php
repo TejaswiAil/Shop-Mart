@@ -19,5 +19,6 @@ Route::middleware('auth')->group(function () {
     Route::get('products/{product}', [\App\Http\Controllers\ProductsController::class, 'show'])->name('products.show');
     Route::post('basket', [\App\Http\Controllers\BasketsController::class, 'store']);
     Route::get('checkout', \App\Http\Controllers\CheckoutController::class);
+    Route::post('orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('order.store');
 });
 
